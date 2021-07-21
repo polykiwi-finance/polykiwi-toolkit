@@ -1,12 +1,65 @@
+import { request, gql } from 'graphql-request'
 import { Colors } from "./types";
+
+const query = gql`
+  query {
+    Project(where: {id: "ckrbsgs3b008972he15vja271"} ) {
+      name
+      themes {
+        type
+        failure
+        primary
+        primaryBright
+        primaryDark
+        secondary
+        success
+        binance
+        overlay
+        background
+        backgroundDisabled
+        backgroundAlt
+        cardBorder
+        contrast
+        dropdown
+        dropdownDeep
+        invertedContrast
+        input
+        inputSecondary
+        tertiary
+        text
+        textDisabled
+        textSubtle
+        disabled
+        gradientBubblegum
+        gradientInverseBubblegum
+        gradientCardHeader
+        gradientBlue
+        gradientViolet
+        gradientVioletAlt
+        gradientGold
+      }
+    }
+  }
+`
+const promise = request('https://api.concha.io/api/graphql', query)
+
+promise.then((data) => {
+  window.localStorage.setItem('appSettings', JSON.stringify(data))
+})
+
+if (!window.localStorage.getItem('appSettings')) {
+  document.body.style.display = 'none'
+  // eslint-disable-next-line no-restricted-globals
+  promise.finally(() => location.reload())
+}
 
 //@ts-ignore
 const settings = JSON.parse(window.localStorage.getItem('appSettings'))
 
 //@ts-ignore
-const lightTheme = settings.Project.themes.find((i) => i.type === 'light')
+const lightTheme = settings?.Project.themes.find((i) => i.type === 'light')
 //@ts-ignore
-const darkTheme = settings.Project.themes.find((i) => i.type === 'dark')
+const darkTheme = settings?.Project.themes.find((i) => i.type === 'dark')
 
 function parseTheme (theme: any): Colors {
   let res = {...theme, gradients: {
@@ -22,10 +75,6 @@ function parseTheme (theme: any): Colors {
   return res;
 }
 
-export const lightColors = parseTheme(lightTheme);
-export const darkColors = parseTheme(darkTheme);
-
-/*
 export const baseColors = {
   failure: "#ED4B9E",
   primary: "#1FC7D4",
@@ -41,7 +90,7 @@ export const additionalColors = {
   overlay: "#452a7a",
 };
 
-export const lightColors: Colors = {
+export const lightColors: Colors = settings ? parseTheme(lightTheme) : {
   ...baseColors,
   ...additionalColors,
   background: "#FAF9FA",
@@ -70,7 +119,7 @@ export const lightColors: Colors = {
   },
 };
 
-export const darkColors: Colors = {
+export const darkColors: Colors = settings ? parseTheme(darkTheme) : {
   ...baseColors,
   ...additionalColors,
   secondary: "#9A6AFF",
@@ -100,4 +149,3 @@ export const darkColors: Colors = {
     gold: "linear-gradient(180deg, #FFD800 0%, #FDAB32 100%)",
   },
 };
-*/
