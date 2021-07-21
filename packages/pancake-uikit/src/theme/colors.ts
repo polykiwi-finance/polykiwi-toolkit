@@ -1,6 +1,7 @@
 import { Colors } from "./types";
 
-const settings = window.localStorage.getItem('appSettings')
+//@ts-ignore
+const settings = JSON.parse(window.localStorage.getItem('appSettings'))
 
 //@ts-ignore
 const lightTheme = settings.Project.themes.find((i) => i.type === 'light')

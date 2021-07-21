@@ -3037,7 +3037,8 @@ var useKonamiCheatCode = function (matchedCodeHandler) {
     }, [matchedCodeHandler]);
 };
 
-var settings = window.localStorage.getItem('appSettings');
+//@ts-ignore
+var settings = JSON.parse(window.localStorage.getItem('appSettings'));
 //@ts-ignore
 var lightTheme$1 = settings.Project.themes.find(function (i) { return i.type === 'light'; });
 //@ts-ignore
