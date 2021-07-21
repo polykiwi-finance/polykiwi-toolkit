@@ -1,5 +1,30 @@
 import { Colors } from "./types";
 
+const settings = window.localStorage.getItem('appSettings')
+
+//@ts-ignore
+const lightTheme = settings.Project.themes.find((i) => i.type === 'light')
+//@ts-ignore
+const darkTheme = settings.Project.themes.find((i) => i.type === 'dark')
+
+function parseTheme (theme: any): Colors {
+  let res = {...theme, gradients: {
+    bubblegum: theme.gradientBubblegum,
+    inverseBubblegum: theme.gradientInverseBubblegum,
+    cardHeader: theme.gradientCardHeadeer,
+    blue: theme.gradientBlue,
+    violet: theme.gradientViolet,
+    violetAlt: theme.gradientVioletAlt,
+    gold: theme.gradientGold
+  }};
+
+  return res;
+}
+
+export const lightColors = parseTheme(lightTheme);
+export const darkColors = parseTheme(darkTheme);
+
+/*
 export const baseColors = {
   failure: "#ED4B9E",
   primary: "#1FC7D4",
@@ -74,3 +99,4 @@ export const darkColors: Colors = {
     gold: "linear-gradient(180deg, #FFD800 0%, #FDAB32 100%)",
   },
 };
+*/
