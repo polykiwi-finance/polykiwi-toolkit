@@ -1,78 +1,25 @@
-import { request, gql } from 'graphql-request'
+import { Theme } from '../util/apiTypes';
+import getConfig from '../util/getConfig';
 import { Colors } from "./types";
 
-const query = gql`
-  query {
-    Project(where: {id: "ckrbsgs3b008972he15vja271"} ) {
-      name
-      themes {
-        type
-        failure
-        primary
-        primaryBright
-        primaryDark
-        secondary
-        success
-        binance
-        overlay
-        background
-        backgroundDisabled
-        backgroundAlt
-        cardBorder
-        contrast
-        dropdown
-        dropdownDeep
-        invertedContrast
-        input
-        inputSecondary
-        tertiary
-        text
-        textDisabled
-        textSubtle
-        disabled
-        gradientBubblegum
-        gradientInverseBubblegum
-        gradientCardHeader
-        gradientBlue
-        gradientViolet
-        gradientVioletAlt
-        gradientGold
-      }
-    }
-  }
-`
-const promise = request('https://api.concha.io/api/graphql', query)
+const settings = getConfig()
 
-promise.then((data) => {
-  window.localStorage.setItem('appSettings', JSON.stringify(data))
-})
+const lightTheme = settings?.themes?.find((i) => i.type === 'light')
+const darkTheme = settings?.themes?.find((i) => i.type === 'dark')
 
-if (!window.localStorage.getItem('appSettings')) {
-  document.body.style.display = 'none'
-  // eslint-disable-next-line no-restricted-globals
-  promise.finally(() => location.reload())
-}
-
-//@ts-ignore
-const settings = JSON.parse(window.localStorage.getItem('appSettings'))
-
-//@ts-ignore
-const lightTheme = settings?.Project.themes.find((i) => i.type === 'light')
-//@ts-ignore
-const darkTheme = settings?.Project.themes.find((i) => i.type === 'dark')
-
-function parseTheme (theme: any): Colors {
-  let res = {...theme, gradients: {
+function parseTheme (theme: Theme): Colors {
+  const res = {...theme, gradients: {
     bubblegum: theme.gradientBubblegum,
     inverseBubblegum: theme.gradientInverseBubblegum,
-    cardHeader: theme.gradientCardHeadeer,
+    cardHeader: theme.gradientCardHeader,
     blue: theme.gradientBlue,
     violet: theme.gradientViolet,
     violetAlt: theme.gradientVioletAlt,
-    gold: theme.gradientGold
-  }};
+    gold: theme.gradientGold,
+  }, warning: "#FFB237", // TODO: Add warning to admin panel
+};
 
-  return res;
+  return res as Colors;
 }
 
 export const baseColors = {
@@ -90,7 +37,7 @@ export const additionalColors = {
   overlay: "#452a7a",
 };
 
-export const lightColors: Colors = settings ? parseTheme(lightTheme) : {
+export const lightColors: Colors = settings ? parseTheme(lightTheme as Theme) : {
   ...baseColors,
   ...additionalColors,
   background: "#FAF9FA",
@@ -119,7 +66,7 @@ export const lightColors: Colors = settings ? parseTheme(lightTheme) : {
   },
 };
 
-export const darkColors: Colors = settings ? parseTheme(darkTheme) : {
+export const darkColors: Colors = settings ? parseTheme(darkTheme as Theme) : {
   ...baseColors,
   ...additionalColors,
   secondary: "#9A6AFF",

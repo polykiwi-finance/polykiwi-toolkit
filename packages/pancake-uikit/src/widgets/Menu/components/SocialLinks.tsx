@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from "react";
 import { SvgProps } from "../../../components/Svg";
 import Flex from "../../../components/Box/Flex";
@@ -14,9 +15,13 @@ const SocialLinks: React.FC = () => (
       const Icon = Icons[social.icon];
       const iconProps = { width: "24px", color: "textSubtle", style: { cursor: "pointer" } };
       const mr = index < socials.length - 1 ? "24px" : 0;
+      // @ts-ignore
       if (social.items) {
         return (
+          // @ts-ignore
           <Dropdown key={social.label} position="top" target={<Icon {...iconProps} mr={mr} />}>
+            {/* 
+            // @ts-ignore */}
             {social.items.map((item) => (
               <Link external key={item.label} href={item.href} aria-label={item.label} color="textSubtle">
                 {item.label}

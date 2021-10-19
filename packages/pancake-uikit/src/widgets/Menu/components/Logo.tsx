@@ -5,6 +5,7 @@ import { LogoIcon } from "../../../components/Svg";
 import Flex from "../../../components/Box/Flex";
 import { HamburgerIcon, HamburgerCloseIcon, LogoIcon as LogoWithText } from "../icons";
 import MenuButton from "./MenuButton";
+import getConfig from "../../../util/getConfig";
 
 interface Props {
   isPushed: boolean;
@@ -49,11 +50,19 @@ const StyledLink = styled(Link)`
 `;
 
 const Logo: React.FC<Props> = ({ isPushed, togglePush, isDark, href }) => {
+  const config = getConfig();
+  console.log(config);
+  // @ts-ignore
+  const logoLight = config.images !== undefined ? config.images?.find((image) => image.name === 'header-logo-light').image?.publicUrl : ''
+  // @ts-ignore
+  const logoDark = config.images !== undefined ? config.images?.find((image) => image.name === 'header-logo-dark').image?.publicUrl : ''
+
+
   const isAbsoluteUrl = href.startsWith("http");
   const innerLogo = (
     <>
-      <LogoIcon className="mobile-icon" />
-      <LogoWithText className="desktop-icon" isDark={isDark} />
+      {/* @ts-ignore */}
+      {!isDark ? <img src={logoLight} alt="polykiwi logo" style={{height: '26px'}}/> : <img src={logoDark} alt="polykiwi logo" style={{height: '26px'}}/>}
     </>
   );
 
